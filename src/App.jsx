@@ -1,12 +1,27 @@
 import { useState } from 'react'
 import './App.css'
 
+const API_KEY = '9c3d6939'
 function App() {
     const [searchBox, setSearch] = useState('')
+    const [movies, setMovies] = useState()
+
+    const getMovies = async search => {
+        const API_ENDPOINT = `https://www.omdbapi.com/?apikey=${API_KEY}&type=movie&s=${search}`
+
+        fetch(API_ENDPOINT)
+            .then(res => {
+                return res.json()
+            })
+            .then(data => {
+                setMovies(data.Search)
+            })
+            .catch(err => console.error(err))
+    }
 
     const handelSearch = e => {
         e.preventDefault()
-        console.log(searchBox)
+        getMovies(searchBox)
     }
     return (
         <>
@@ -25,7 +40,15 @@ function App() {
                 </form>
             </header>
             <main>
-                <p>here we will display our movie list</p>
+                <ul>
+                    {movies?.map(movie => (
+                        <li key={movie.imdbID}>
+                            <img src={movie.Poster} alt={movie.Title} />
+                            <h3>{movie.Title}</h3>
+                            <p>{movie.Year}</p>
+                        </li>
+                    ))}
+                </ul>
             </main>
         </>
     )
