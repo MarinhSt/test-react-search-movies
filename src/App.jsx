@@ -7,9 +7,9 @@ function App() {
     const [movies, setMovies] = useState()
 
     const getMovies = async search => {
-        const API_ENDPOINT = `https://www.omdbapi.com/?apikey=${API_KEY}&type=movie&s=${search}`
+        const API_URL_ENDPOINT_MOVIE_LIST = `https://www.omdbapi.com/?apikey=${API_KEY}&type=movie&s=${search}`
 
-        fetch(API_ENDPOINT)
+        fetch(API_URL_ENDPOINT_MOVIE_LIST)
             .then(res => {
                 return res.json()
             })
@@ -25,27 +25,79 @@ function App() {
     }
     return (
         <>
-            <header>
+            <header
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
                 <h1>Movie Search</h1>
-                <form onSubmit={handelSearch} className="searchbox">
+                <form
+                    onSubmit={handelSearch}
+                    className="searchbox"
+                    style={{ display: 'flex' }}
+                >
                     <input
                         type="text"
                         onChange={({ target }) => setSearch(target.value)}
                         value={searchBox}
                         placeholder="fast and furious, star wars ..."
+                        style={{
+                            height: '40px',
+                            width: '200px',
+                            margin: '0',
+                            borderRadius: '25px 0px 0px 25px',
+                            border: 'none',
+                            boxSizing: 'border-box',
+                            paddingLeft: '15px',
+                        }}
                     />
-                    <button type="submit">
+                    <button
+                        type="submit"
+                        style={{
+                            height: '40px',
+                            width: '60px',
+                            padding: '0',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '0px 30px 30px 0px',
+                        }}
+                    >
                         <i className="  material-icons">search</i>
                     </button>
                 </form>
             </header>
             <main>
-                <ul>
+                <ul
+                    style={{
+                        listStyle: 'none',
+                        width: '89%',
+                        margin: '30px auto',
+                        padding: '0',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexWrap: 'wrap',
+                        gap: '10px',
+                    }}
+                >
                     {movies?.map(movie => (
-                        <li key={movie.imdbID}>
-                            <img src={movie.Poster} alt={movie.Title} />
-                            <h3>{movie.Title}</h3>
+                        <li
+                            key={movie.imdbID}
+                            style={{
+                                width: '200px',
+                                flexGrow: '1fr',
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <h4>{movie.Title}</h4>
                             <p>{movie.Year}</p>
+                            <img
+                                src={movie.Poster}
+                                alt={`poster of movie ${movie.Title}`}
+                            />
                         </li>
                     ))}
                 </ul>
