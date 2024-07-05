@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import './App.css'
+import mock from './mock/movies-mock.json'
+import { ListOfMovies } from './components/ListOfMovies'
 
 const API_KEY = '9c3d6939'
 function App() {
@@ -82,24 +84,11 @@ function App() {
                         gap: '10px',
                     }}
                 >
-                    {movies?.map(movie => (
-                        <li
-                            key={movie.imdbID}
-                            style={{
-                                width: '200px',
-                                flexGrow: '1fr',
-                                display: 'flex',
-                                flexDirection: 'column',
-                            }}
-                        >
-                            <h4>{movie.Title}</h4>
-                            <p>{movie.Year}</p>
-                            <img
-                                src={movie.Poster}
-                                alt={`poster of movie ${movie.Title}`}
-                            />
-                        </li>
-                    ))}
+                    {!movies ? (
+                        <ListOfMovies movies={mock} />
+                    ) : (
+                        <ListOfMovies movies={movies} />
+                    )}
                 </ul>
             </main>
         </>
