@@ -2,11 +2,14 @@ import { useState } from 'react'
 import './App.css'
 import mock from './mock/movies-mock.json'
 import { ListOfMovies } from './components/ListOfMovies'
+import { SearchError } from './components/SearchError'
 
 const API_KEY = '9c3d6939'
 function App() {
     const [searchBox, setSearch] = useState('')
     const [movies, setMovies] = useState()
+    const [loding, setLoading] = useState(false)
+    const [errorSearchMovie, setErrorSearchMovie] = useState(null)
 
     const getMovies = async search => {
         const API_URL_ENDPOINT_MOVIE_LIST = `https://www.omdbapi.com/?apikey=${API_KEY}&type=movie&s=${search}`
@@ -16,15 +19,30 @@ function App() {
                 return res.json()
             })
             .then(data => {
+                if (data.Error) {
+                    setErrorSearchMovie(
+                        `Error: ${data.Error}. Try with another search.`
+                    )
+                    setMovies(null)
+                    setLoading(false)
+
+                    throw new Error(data.Error)
+                }
                 setMovies(data.Search)
+                setLoading(false)
+                console.log('movies', movies)
             })
             .catch(err => console.error(err))
     }
 
     const handelSearch = e => {
         e.preventDefault()
+        setLoading(true)
         getMovies(searchBox)
+        setErrorSearchMovie(null)
     }
+    console.log('movies', movies)
+
     return (
         <>
             <header
@@ -45,6 +63,7 @@ function App() {
                         onChange={({ target }) => setSearch(target.value)}
                         value={searchBox}
                         placeholder="fast and furious, star wars ..."
+                        required
                         style={{
                             height: '40px',
                             width: '200px',
@@ -84,11 +103,15 @@ function App() {
                         gap: '10px',
                     }}
                 >
-                    {!movies ? (
+                    {!loding && !movies && !errorSearchMovie && (
                         <ListOfMovies movies={mock} />
-                    ) : (
-                        <ListOfMovies movies={movies} />
                     )}
+                    {!loding &&
+                        (errorSearchMovie ? (
+                            <SearchError text={errorSearchMovie} />
+                        ) : (
+                            <ListOfMovies movies={movies} />
+                        ))}
                 </ul>
             </main>
         </>
