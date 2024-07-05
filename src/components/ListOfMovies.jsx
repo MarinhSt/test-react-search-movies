@@ -3,7 +3,7 @@ export function ListOfMovies({ movies = [] }) {
         <>
             {movies.map(movie => (
                 <li
-                    key={movie.imdbID}
+                    key={movie.id}
                     style={{
                         width: '200px',
                         display: 'flex',
@@ -12,11 +12,11 @@ export function ListOfMovies({ movies = [] }) {
                         boxShadow: '0 0 5px 0 #ccc',
                     }}
                 >
-                    <h4>{movie.Title}</h4>
-                    <p>{movie.Year}</p>
+                    <h4>{movie.title}</h4>
+                    <p>{movie.year}</p>
                     <img
-                        src={movie.Poster}
-                        alt={`poster of movie ${movie.Title}`}
+                        src={movie.poster}
+                        alt={`poster of movie ${movie.title}`}
                     />
                 </li>
             ))}

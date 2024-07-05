@@ -3,6 +3,7 @@ import './App.css'
 import mock from './mock/movies-mock.json'
 import { ListOfMovies } from './components/ListOfMovies'
 import { SearchError } from './components/SearchError'
+import { adapted } from './adapters/movie-adapted'
 
 const API_KEY = '9c3d6939'
 function App() {
@@ -15,9 +16,7 @@ function App() {
         const API_URL_ENDPOINT_MOVIE_LIST = `https://www.omdbapi.com/?apikey=${API_KEY}&type=movie&s=${search}`
 
         fetch(API_URL_ENDPOINT_MOVIE_LIST)
-            .then(res => {
-                return res.json()
-            })
+            .then(res => res.json())
             .then(data => {
                 if (data.Error) {
                     setErrorSearchMovie(
@@ -28,9 +27,8 @@ function App() {
 
                     throw new Error(data.Error)
                 }
-                setMovies(data.Search)
+                setMovies(() => adapted(data))
                 setLoading(false)
-                console.log('movies', movies)
             })
             .catch(err => console.error(err))
     }
@@ -41,7 +39,6 @@ function App() {
         getMovies(searchBox)
         setErrorSearchMovie(null)
     }
-    console.log('movies', movies)
 
     return (
         <>
@@ -104,11 +101,11 @@ function App() {
                     }}
                 >
                     {!loding && !movies && !errorSearchMovie && (
-                        <ListOfMovies movies={mock} />
+                        <ListOfMovies movies={adapted(mock)} />
                     )}
                     {!loding &&
                         (errorSearchMovie ? (
-                            <SearchError text={errorSearchMovie} />
+                            <SearchError errorMessage={errorSearchMovie} />
                         ) : (
                             <ListOfMovies movies={movies} />
                         ))}
