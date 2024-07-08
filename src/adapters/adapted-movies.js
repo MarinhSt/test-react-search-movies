@@ -1,4 +1,4 @@
-export function adapted(data) {
+export function adaptedMovies(data) {
     return data.Search.map(movie => {
         return {
             id: movie.imdbID,

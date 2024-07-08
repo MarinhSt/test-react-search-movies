@@ -1,43 +1,24 @@
 import { useState } from 'react'
 import './App.css'
-import mock from './mock/movies-mock.json'
+import { useMovies } from './hooks/useMovies'
 import { ListOfMovies } from './components/ListOfMovies'
 import { SearchError } from './components/SearchError'
-import { adapted } from './adapters/movie-adapted'
 
-const API_KEY = '9c3d6939'
 function App() {
     const [searchBox, setSearch] = useState('')
-    const [movies, setMovies] = useState()
-    const [loding, setLoading] = useState(false)
-    const [errorSearchMovie, setErrorSearchMovie] = useState(null)
-
-    const getMovies = async search => {
-        const API_URL_ENDPOINT_MOVIE_LIST = `https://www.omdbapi.com/?apikey=${API_KEY}&type=movie&s=${search}`
-
-        fetch(API_URL_ENDPOINT_MOVIE_LIST)
-            .then(res => res.json())
-            .then(data => {
-                if (data.Error) {
-                    setErrorSearchMovie(
-                        `Error: ${data.Error}. Try with another search.`
-                    )
-                    setMovies(null)
-                    setLoading(false)
-
-                    throw new Error(data.Error)
-                }
-                setMovies(() => adapted(data))
-                setLoading(false)
-            })
-            .catch(err => console.error(err))
-    }
+    const {
+        defaultMovies,
+        movies,
+        loding,
+        errorSearchMovie,
+        getMovies,
+        cleanToSearch,
+    } = useMovies(searchBox)
 
     const handelSearch = e => {
         e.preventDefault()
-        setLoading(true)
         getMovies(searchBox)
-        setErrorSearchMovie(null)
+        cleanToSearch()
     }
 
     return (
@@ -101,7 +82,7 @@ function App() {
                     }}
                 >
                     {!loding && !movies && !errorSearchMovie && (
-                        <ListOfMovies movies={adapted(mock)} />
+                        <ListOfMovies movies={defaultMovies} />
                     )}
                     {!loding &&
                         (errorSearchMovie ? (
