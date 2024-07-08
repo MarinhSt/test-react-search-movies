@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { useMovies } from './hooks/useMovies'
-import { ListOfMovies } from './components/ListOfMovies'
-import { SearchError } from './components/SearchError'
+import { ShowMovies } from './components/ShowMovies'
 
 function App() {
     const [searchBox, setSearch] = useState('')
@@ -81,15 +80,12 @@ function App() {
                         gap: '10px',
                     }}
                 >
-                    {!loding && !movies && !errorSearchMovie && (
-                        <ListOfMovies movies={defaultMovies} />
-                    )}
-                    {!loding &&
-                        (errorSearchMovie ? (
-                            <SearchError errorMessage={errorSearchMovie} />
-                        ) : (
-                            <ListOfMovies movies={movies} />
-                        ))}
+                    <ShowMovies
+                        defaultMovies={defaultMovies}
+                        movies={movies}
+                        loding={loding}
+                        errorSearchMovie={errorSearchMovie}
+                    />
                 </ul>
             </main>
         </>
